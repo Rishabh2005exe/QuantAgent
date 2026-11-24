@@ -1,0 +1,27 @@
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# Python virtual environments
+.venv/
+.venv-1/
+venv/
+venv1/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.backup
+
+# Test and tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Generated packaging files
+dist/
+build/
+*.egg-info/

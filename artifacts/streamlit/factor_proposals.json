@@ -1,0 +1,61 @@
+[
+  {
+    "category": "random",
+    "name": "random_baseline_s143",
+    "hypothesis": "A seeded random combination of allowed operators is used only as a control group; it does not encode an economic hypothesis.",
+    "economic_rationale": "None. This baseline estimates how easily a mechanically generated expression can appear interesting on the same sample.",
+    "expression": "Rank(Corr(vwap, volume, 10)) + Rank(Delta(close, 2))",
+    "expected_direction": "positive",
+    "data_requirements": [
+      "OHLCV",
+      "amount"
+    ],
+    "risk_notes": [
+      "No economic rationale",
+      "In-sample chance discovery",
+      "Seed-sensitive expression"
+    ],
+    "iteration_note": "Seeded random control; not produced by an LLM."
+  },
+  {
+    "category": "llm_single",
+    "name": "Volume-Weighted Price Momentum with Trend Confirmation",
+    "hypothesis": "Stocks with stronger recent volume-weighted price appreciation, confirmed by a shorter-term trend, tend to outperform over the medium horizon.",
+    "economic_rationale": "Volume-weighted price captures the average price at which trading occurred, reflecting market consensus. Momentum with volume confirmation may indicate sustained demand and positive information diffusion, while the shorter-term trend filter avoids stocks with weakening price action.",
+    "expression": "Rank((close - Delay(close, 20)) / Delay(close, 20) * (1 + (vwap - Delay(vwap, 20)) / Delay(vwap, 20)) * (close / Delay(close, 5) - 1))",
+    "expected_direction": "positive",
+    "data_requirements": [
+      "daily adjusted close price",
+      "daily volume-weighted average price (vwap)"
+    ],
+    "risk_notes": [
+      "Momentum crashes during market reversals or high volatility regimes.",
+      "The factor may be sensitive to liquidity and trading volume anomalies.",
+      "Short-term reversal effects could negate the trend confirmation component.",
+      "Crowding risk if many investors adopt similar momentum strategies.",
+      "Data quality issues with vwap calculation could distort the signal."
+    ],
+    "iteration_note": "Initial proposal combining medium-term price momentum, volume-weighted price momentum, and a short-term trend filter. Future iterations may adjust lookback windows or introduce volatility scaling."
+  },
+  {
+    "category": "llm_feedback",
+    "name": "Volume-Weighted Price Momentum with Trend Confirmation (Revised)",
+    "hypothesis": "Stocks with stronger recent volume-weighted price appreciation, confirmed by a shorter-term trend, tend to outperform over the medium horizon; simplifying to a cleaner, lower-turnover rank of volume-confirmed momentum may reduce noise relative to the multiplicative composite.",
+    "economic_rationale": "Volume-weighted price captures the average transaction price and market consensus; combining medium-horizon price momentum with a volume-confirmed vwap momentum term preserves the demand-confirmation idea. The prior multiplicative construction mixed three noisy components and produced near-zero rank IC and negative realized returns on this sample, so the revision drops the short-term trend multiplier and shortens complexity to reduce turnover and noise, while retaining the same broad economic thesis.",
+    "expression": "Rank((close - Delay(close, 20)) / Delay(close, 20) + (vwap - Delay(vwap, 20)) / Delay(vwap, 20))",
+    "expected_direction": "positive",
+    "data_requirements": [
+      "daily adjusted close price",
+      "daily volume-weighted average price (vwap)",
+      "daily volume"
+    ],
+    "risk_notes": [
+      "Momentum crashes during market reversals or high volatility regimes.",
+      "Rank IC was weak on the prior sample; any revision remains in-sample and may overfit.",
+      "Dropping the trend filter may increase exposure to short-term reversals.",
+      "vwap data quality and liquidity anomalies could distort the signal.",
+      "Crowding risk in momentum-style factors."
+    ],
+    "iteration_note": "Revised once from measured feedback: removed the short-term trend multiplier and simplified to an additive rank of 20-day close momentum plus 20-day vwap momentum, aiming to reduce turnover and composite noise; not yet re-evaluated, so no improvement is claimed."
+  }
+]

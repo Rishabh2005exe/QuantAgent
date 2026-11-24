@@ -1,0 +1,12 @@
+{
+  "advice": [
+    "Rank IC is weak on this sample; simplify the thesis or lengthen the horizon.",
+    "Any revision evaluated on the same sample remains in-sample and may overfit."
+  ],
+  "feedback_vs_single": {
+    "rank_ic_mean_delta": -0.0023494259079125577,
+    "mean_turnover_delta": -0.1869230769230769,
+    "max_drawdown_delta": 0.02441565152540759,
+    "note": "Computed on the same sample; a positive delta is not out-of-sample evidence of improvement."
+  }
+}
